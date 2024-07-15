@@ -1,0 +1,66 @@
+@startuml
+
+hide circle
+skinparam linetype ortho
+
+class "**geo_result**" {
+# <b>""id""</b>: //""integer"" <b><color:goldenrod>(PK) </color></b> //
+---
+* <b>""geo_id""</b>: //""integer"" <b><color:701fc6>(FK) </color></b> //
+* <b>""geom_text""</b>: //""text""  //
+* <b>""imei""</b>: //""character varying""  //
+* <b>""is_contains""</b>: //""boolean""  //
+* <b>""points_text""</b>: //""text""  //
+}
+
+class "**geography_columns**" {
+---
+* <b>""coord_dimension""</b>: //""integer""  //
+* <b>""f_geography_column""</b>: //""name""  //
+* <b>""f_table_catalog""</b>: //""name""  //
+* <b>""f_table_name""</b>: //""name""  //
+* <b>""f_table_schema""</b>: //""name""  //
+* <b>""srid""</b>: //""integer""  //
+* <b>""type""</b>: //""text""  //
+}
+
+class "**geometry_columns**" {
+---
+* <b>""coord_dimension""</b>: //""integer""  //
+* <b>""f_geometry_column""</b>: //""name""  //
+* <b>""f_table_catalog""</b>: //""character varying""  //
+* <b>""f_table_name""</b>: //""name""  //
+* <b>""f_table_schema""</b>: //""name""  //
+* <b>""srid""</b>: //""integer""  //
+* <b>""type""</b>: //""character varying""  //
+}
+
+class "**hyper_geo_locations**" {
+# <b>""id""</b>: //""integer"" <b><color:goldenrod>(PK) </color></b> //
+---
+* <b>""geom""</b>: //""geometry""  //
+* <b>""imei""</b>: //""character varying""  //
+* <b>""points""</b>: //""json""  //
+}
+
+class "**seaql_migrations**" {
+# <b>""version""</b>: //""character varying"" <b><color:goldenrod>(PK) </color></b> //
+---
+* <b>""applied_at""</b>: //""bigint""  //
+}
+
+class "**spatial_ref_sys**" {
+# <b>""srid""</b>: //""integer"" <b><color:goldenrod>(PK) </color></b> //
+---
+* <b>""auth_name""</b>: //""character varying""  //
+* <b>""auth_srid""</b>: //""integer""  //
+* <b>""proj4text""</b>: //""character varying""  //
+* <b>""srtext""</b>: //""character varying""  //
+}
+
+
+"**geo_result**" }o--|| "**hyper_geo_locations**"
+
+
+@enduml
+

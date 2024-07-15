@@ -1,0 +1,37 @@
+{
+    "workbench.colorCustomizations": {
+        "checkbox.background": "#19241b",
+        "checkbox.foreground": "#19241b",
+        "checkbox.border": "#288bb3",
+        "input.background": "#1b2601",
+        "input.border": "#288bb3",
+        "scrollbar.shadow": "#288bb3",
+        "scrollbar.background": "#19241b",
+        "scrollbarSlider.activeBackground": "#288bb3",
+        "scrollbarSlider.background": "#19241b",
+        "scrollbarSlider.hoverBackground": "#288bb3",
+        "activityBar.activeBackground": "#c86c5d",
+        "activityBar.background": "#c86c5d",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#205f29",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#c86c5d",
+        "statusBar.background": "#b54e3d",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#c86c5d",
+        "statusBarItem.remoteBackground": "#b54e3d",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#b54e3d",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#b54e3d99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "rust-analyzer.linkedProjects": [
+        "./Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "rust-analyzer.checkOnSave": true,
+    "peacock.color": "#b54e3d"
+}

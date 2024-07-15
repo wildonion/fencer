@@ -1,0 +1,80 @@
+code: 65535 | message: Query Error: error returned from database: column "hyper_locations.speed" must appear in the GROUP BY clause or be used in an aggregate function | due to: Redis, RMQ or Seaorm Error
+ | time: 1714561589584 | method name: LocationMutatorActor.store.db.execute
+code: 65535 | message: Query Error: error returned from database: column "seed" does not exist | due to: Redis, RMQ or Seaorm Error
+ | time: 1714561667081 | method name: LocationMutatorActor.store.db.execute
+code: 65535 | message: Query Error: error returned from database: column "hyper_locations.speed" must appear in the GROUP BY clause or be used in an aggregate function | due to: Redis, RMQ or Seaorm Error
+ | time: 1714565774537 | method name: LocationMutatorActor.store.db.execute
+code: 65535 | message: Error occurred while creating a new object: protocol error: AMQP soft error: ACCESS-REFUSED: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716367609659 | method name: LocationConsumerActor.consume_pool
+code: 65535 | message: Error occurred while creating a new object: protocol error: AMQP soft error: ACCESS-REFUSED: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716367609669 | method name: ZerLogProducerActor.produce_pool
+code: 65535 | message: protocol error: AMQP soft error: NOT-FOUND: NOT_FOUND - no exchange 'Events:LocationEvent' in vhost '/' | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703791690 | method name: LocationConsumerActor.queue_bind
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703858904 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703860141 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703863787 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703879913 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703880409 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703880721 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716703882812 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704056398 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704074775 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: column "points" is of type point[] but expression is of type text | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704268828 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704327508 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "{ (0,0),(2,0),(1,0) }" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704525316 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "{ (35.721918,51.334714),(35.721918,51.334728),(35.721921,51.334729) }" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704630910 | method name: store_geo.db.execute
+code: 65535 | message: IO error: Operation timed out (os error 60) | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704672548 | method name: LocationConsumerActor.queue_bind
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704880508 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716704883650 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705123220 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705210802 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705228178 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705431990 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705462572 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705476974 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705498489 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705577873 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716705589208 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716706825269 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: invalid input syntax for type point: "(35.721918" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716706826065 | method name: store_geo.db.execute
+code: 65535 | message: NOAUTH: Authentication required. | due to: Redis, RMQ or Seaorm Error
+ | time: 1716706849723 | method name: LocationConsumerActor.redis_get
+code: 65535 | message: Execution Error: error returned from database: geometry requires more points | due to: Redis, RMQ or Seaorm Error
+ | time: 1716709621936 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: geometry contains non-closed rings | due to: Redis, RMQ or Seaorm Error
+ | time: 1716709733741 | method name: store_geo.db.execute
+code: 65535 | message: Query Error: error returned from database: column "poinsts" does not exist | due to: Redis, RMQ or Seaorm Error
+ | time: 1716711823040 | method name: get_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: syntax error at or near "#" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716712429769 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: syntax error at or near "#" | due to: Redis, RMQ or Seaorm Error
+ | time: 1716712747529 | method name: store_geo.db.execute
+code: 65535 | message: Execution Error: error returned from database: geometry contains non-closed rings | due to: Redis, RMQ or Seaorm Error
+ | time: 1716712973852 | method name: store_geo.db.execute

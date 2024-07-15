@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  geo-checker:
+    container_name: geo-checker
+    image: docker.yourdomain.com/geo-checker
+    build:
+      context: ./
+      dockerfile: ./infra/docker/rustacki-geo/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "2348:2344"
+    volumes:
+      - ./assets:/app/assets:ro
+      - ./infra/logs:/app/logs:rw
