@@ -72,12 +72,14 @@ Coded by
 */
 
 use crate::actors::consumers::location::ConsumeNotif;
+use crate::actors::consumers::route::ConsumeNotif as RouteConsumeNotif;
 use crate::actors::producers::location::ProduceNotif;
 use crate::consts::APP_NAME;
 use std::env;
 use std::error::Error;
 use std::net::SocketAddr;
 use actix_web::middleware::Logger;
+use actors::consumers::route::RouteLocationConsumerActor;
 use consts::{MAILBOX_CHANNEL_ERROR_CODE, SERVERS};
 use clap::Parser;
 use dotenv::dotenv;
@@ -202,7 +204,7 @@ async fn main() -> std::io::Result<()>{
     ///// ------------------------------------------------------------------------------------
     ///// ------------------------------------------------------------------------------------
     ///// ------------------------------------------------------------------------------------
-    // start consuming in the background
+    // start consuming in the background for geofence checker
     tokio::spawn(
         {
             let cloned_app_state = app_state.clone();
@@ -229,6 +231,55 @@ async fn main() -> std::io::Result<()>{
                                 source.as_bytes().to_vec(), // text of error source in form of utf8 bytes
                                 crate::error::ErrorKind::Actor(crate::error::ActixMailBoxError::Mailbox(e)), // the actual source of the error caused at runtime
                                 &String::from("main.consumer_actors.location_actor.send"), // current method name
+                                Some(&zerlog_producer_actor)
+                            ).await;
+                            return;
+                        }
+                    }
+
+            }
+        }
+    );
+    ///// ------------------------------------------------------------------------------------
+    ///// ------------------------------------------------------------------------------------
+    ///// ------------------------------------------------------------------------------------
+    
+    let app_storage = app_state.clone().app_storage;
+    let actors = app_state.clone().actors.unwrap();
+    let zerlog_producer_actor = actors.producer_actors.zerlog_actor;
+    let notif_producer_actor = actors.producer_actors.location_actor;
+    let route_checker_actor = RouteLocationConsumerActor::new(
+        app_storage.clone(),
+        notif_producer_actor,
+        zerlog_producer_actor,
+    ).start();
+        
+    // start consuming location event in the background for route checker
+    tokio::spawn(
+        {
+            let cloned_app_state = app_state.clone();
+            let cloned_notif = RouteConsumeNotif{ 
+                queue: String::from("RustGeofenceRoute"), 
+                exchange_name: String::from("Events:LocationEvent"), 
+                routing_key: String::from(""), 
+                tag: String::from("geo_consume_tag1"), 
+                redis_cache_exp: 500 
+            };
+
+            let zerlog_producer_actor = cloned_app_state.clone().actors.unwrap().producer_actors.zerlog_actor;
+            async move{
+                // consuming notif by sending the ConsumeNotif message to 
+                // the consumer actor,
+                match route_checker_actor.send(cloned_notif).await
+                    {
+                        Ok(ok) => {ok},
+                        Err(e) => {
+                            let source = &e.source().unwrap().to_string(); // we know every goddamn type implements Error trait, we've used it here which allows use to call the source method on the object
+                            let err_instance = crate::error::RustackiErrorResponse::new(
+                                *MAILBOX_CHANNEL_ERROR_CODE, // error hex (u16) code
+                                source.as_bytes().to_vec(), // text of error source in form of utf8 bytes
+                                crate::error::ErrorKind::Actor(crate::error::ActixMailBoxError::Mailbox(e)), // the actual source of the error caused at runtime
+                                &String::from("main.consumer_actors.route.send"), // current method name
                                 Some(&zerlog_producer_actor)
                             ).await;
                             return;

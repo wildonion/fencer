@@ -2,7 +2,7 @@
 
 a GPS location consumer over RMQ, it consumes incoming location events from the relevant exchange then it checks each point (lat, lon) against the defined geofence (supports both **Polygon** and **LineString**) for that device based on the imei. See postman collection to define geofence for a device.
 
-[this](https://github.com/wildonion/acumer) service stores each location event coming from the exchange inside the db along with their cumulative mileage.
+[this](https://github.com/wildonion/gps-location-consumer) service stores each location event coming from the exchange inside the db along with their cumulative mileage.
 
 ## How 2 setup, develop, and deploy?
 
@@ -88,7 +88,7 @@ sudo chown -R root:root . && sudo chmod -R 777 .
 
 - **step3)** the docker [registry](https://distribution.github.io/distribution/) service is up and running on your VPS.
 
-- **step4)** you would probably want to make `logs` dir and `docker.yourdomain.com` routes secure and safe, you can achive this by adding an auth gaurd on the docker registry subdomain and the logs dir inside their nginx config files eventually setup the password for `logs` dir and `docker.yourdomain.com` route by running `sudo apt-get install -y apache2-utils && htpasswd -c infra/docker/nginx/.htpasswd rustackigeo` command, the current one is `rustackigeo@1234`.
+- **step4)** you would probably want to make `logs` dir and `docker.sprun.ir` routes secure and safe, you can achive this by adding an auth gaurd on the docker registry subdomain and the logs dir inside their nginx config files eventually setup the password for `logs` dir and `docker.sprun.ir` route by running `sudo apt-get install -y apache2-utils && htpasswd -c infra/docker/nginx/.htpasswd rustackigeo` command, the current one is `rustackigeo@1234`.
 
 - **step5)** setup `DOCKER_PASSWORD`, `DOCKER_USERNAME`, `SERVER_HOST`, `SERVER_USER` and `SERVER_PASSWORD` secrets and variables on your repository.
 
@@ -96,7 +96,7 @@ sudo chown -R root:root . && sudo chmod -R 777 .
 
 - **step7)** created a `/root/hoopoe` folder on your VPS containing the `docker-compose.yml` file only and update its path inside the `cicd.yml` file, take this note that the default location and directory for none root users are `/home`.
 
-- **step8)** each image name inside your compose file must be prefixed with your docker hub registry endpoint which in this case is `docker.yourdomain.com` cause the doamin is already pointing to the docker registry hosted on `localhost:5000` on VPS.
+- **step8)** each image name inside your compose file must be prefixed with your docker hub registry endpoint which in this case is `docker.sprun.ir` cause the doamin is already pointing to the docker registry hosted on `localhost:5000` on VPS.
 
 ##### What's happening inside the `cicd.yml` file?
 
@@ -109,3 +109,26 @@ sudo chown -R root:root . && sudo chmod -R 777 .
 - **step3)** eventually it push them to your custom docker hub registry.
 
 - **step4)** ssh to the VPS and cd to where you've put the `docker-compose.yml` file in there then pull and up all pushed docker containers from the VPS hub inside the VPS.
+
+## routes and apis
+
+```bash
+🥛 RUSTACKIGEO WEBSOCKET STREAMING HTTP ROUTE   ==> https://event.api.your-app.app/stream
+🥛 RUSTACKIGEO WEBSOCKET STREAMING WS ROUTE     ==> wss://event.api.your-app.app/stream
+🛤️ RUSTACKIGEO HTTP APIs                        ==> https://api.your-app.app/
+🛢️ RUSTACKIGEO ADMINER                          ==> https://adminer.your-app.app
+👨🏻‍💻 RUSTACKIGEO DBEAVER                          ==> https://dbeaver.your-app.app
+⛵ RUSTACKIGEO PRTAINER                         ==> https://portainer.your-app.app
+📊 RUSTACKIGEO GRAFANA                          ==> https://grafana.your-app.app
+🚥 RUSTACKIGEO RMQ                              ==> https://rmq.your-app.app
+🗞️ RUSTACKIGEO LOGS                             ==> https://api.your-app.app/logs
+🗂️ RUSTACKIGEO ASSETS FOLDER                    ==> https://api.your-app.app/assets
+```
+
+## 🗃️ wikis, docs, erds, schemas and collections
+
+[Rust Ownership and Borrowing Rules](https://github.com/wildonion/gvm/wiki/Ownership-and-Borrowing-Rules)
+
+[ERD Schema](https://github.com/wildonion/geofence-checker/blob/main/infra/geochecker.png)
+
+[HTTP Postman Collection](https://github.com/wildonion/geofence-checker/blob/main/infra/api.http.json)

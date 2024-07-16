@@ -25,4 +25,9 @@ pub fn init(config: &mut web::ServiceConfig){
     config.service(apis::http::v1::events::geo::delete_geo);
     config.service(apis::http::v1::events::geo::update_geo);
 
+    config.service(apis::http::v1::events::line::store_line);
+    config.service(apis::http::v1::events::line::get_line);
+    config.service(apis::http::v1::events::line::delete_line);
+    config.service(apis::http::v1::events::line::update_line);
+
 }

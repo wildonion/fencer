@@ -83,18 +83,18 @@ pub struct ConsumeNotif{
 }
 
 #[derive(Clone)]
-pub struct LocationConsumerActor{
+pub struct RouteLocationConsumerActor{
     pub app_storage: std::option::Option<Arc<Storage>>,
     pub notif_producer_actor: Addr<LocationProducerActor>,
     pub zerlog_producer_actor: Addr<ZerLogProducerActor>
 }
 
-impl Actor for LocationConsumerActor{
+impl Actor for RouteLocationConsumerActor{
     type Context = Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
 
-        log::info!("🎬 LocationConsumerActor has started, let's consume baby!");
+        log::info!("🎬 RouteLocationConsumerActor has started, let's consume baby!");
 
         ctx.run_interval(PING_INTERVAL, |actor, ctx|{
             
@@ -113,7 +113,7 @@ impl Actor for LocationConsumerActor{
     }
 }
 
-impl LocationConsumerActor{
+impl RouteLocationConsumerActor{
 
     pub fn new(app_storage: std::option::Option<Arc<Storage>>, 
             notif_producer_actor: Addr<LocationProducerActor>,
@@ -157,7 +157,7 @@ impl LocationConsumerActor{
                                 *consts::STORAGE_IO_ERROR_CODE, // error code
                                 error_content, // error content
                                 ErrorKind::Storage(crate::error::StorageError::Rmq(e)), // error kind
-                                "LocationConsumerActor.queue_declare", // method
+                                "RouteLocationConsumerActor.queue_declare", // method
                                 Some(&zerlog_producer_actor)
                             ).await;
 
@@ -179,7 +179,7 @@ impl LocationConsumerActor{
                                         *consts::STORAGE_IO_ERROR_CODE, // error code
                                         error_content, // error content
                                         ErrorKind::Storage(crate::error::StorageError::Rmq(e)), // error kind
-                                        "LocationConsumerActor.queue_bind", // method
+                                        "RouteLocationConsumerActor.queue_bind", // method
                                         Some(&zerlog_producer_actor)
                                     ).await;
 
@@ -261,7 +261,7 @@ impl LocationConsumerActor{
                                                                                             *consts::CODEC_ERROR_CODE, // error code
                                                                                             error_content_, // error content
                                                                                             ErrorKind::Codec(crate::error::CodecError::Serde(e)), // error kind
-                                                                                            "LocationConsumerActor.decode_serde_redis", // method
+                                                                                            "RouteLocationConsumerActor.decode_serde_redis", // method
                                                                                             Some(&zerlog_producer_actor)
                                                                                         ).await;
 
@@ -283,29 +283,29 @@ impl LocationConsumerActor{
 
                                                                             }
                                                                         };
-                                                                        
+
 
                                                                         /////// ------------------------------------------------------------------------------------------------------
-                                                                        /////// ------------------------------ check the incoming locations is inside the geofence then isnert in db
+                                                                        /////// ------------------------------ check the incoming locations is inside the route then isnert in db
                                                                         /////// ------------------------------------------------------------------------------------------------------
-                                                                        // check geofence process
-                                                                        let geo_check_resp = LocationAccessorActor::check_geofence(
+
+                                                                        let route_check_resp = LocationAccessorActor::check_route(
                                                                             message.clone(), storage.clone(), zerlog_producer_actor.clone()).await;
 
-                                                                        log::info!("geo_check_resp ::::: {:?}", geo_check_resp);
-                                                                        
+                                                                        log::info!("route_check_resp ::::: {:?}", route_check_resp);
+
                                                                         // getting the last entry from redis to check that 
                                                                         // the is_contains has changed or not if it has changed 
                                                                         // we'll insert into db and publish as notif to rmq
-                                                                        let last_db_data = geo_check_resp.clone().unwrap_or_default();
-                                                                        let redis_notif_key = format!("geo_{}", message.clone().imei.unwrap_or_default());
+                                                                        let last_db_data = route_check_resp.clone().unwrap_or_default();
+                                                                        let redis_notif_key = format!("route_{}", message.clone().imei.unwrap_or_default());
                                                                         let is_key_there: bool = redis_conn.exists(&redis_notif_key).await.unwrap();
 
                                                                         let mut should_we_insert = false;
                                                                         if is_key_there{
                                                                             let geo_check_data_string: String = redis_conn.get(&redis_notif_key).await.unwrap();
-                                                                            let redis_last_data = serde_json::from_str::<CheckGeoFenceDbResponse>(&geo_check_data_string).unwrap();
-                                                                            if redis_last_data.is_contains != last_db_data.is_contains{ // outside of the fence
+                                                                            let redis_last_data = serde_json::from_str::<CheckRouteDbResponse>(&geo_check_data_string).unwrap();
+                                                                            if redis_last_data.is_contains != last_db_data.is_contains{ // outside of the route 
                                                                                 should_we_insert = true;
                                                                             }
                                                                         } else{
@@ -313,17 +313,17 @@ impl LocationConsumerActor{
                                                                         };
                                                                         
 
-                                                                        let stringified_geo_check_resp = serde_json::to_string(&geo_check_resp.clone().unwrap_or_default()).unwrap();
-                                                                        let _: () = redis_conn.set(&redis_notif_key.clone(), &stringified_geo_check_resp).await.unwrap();
+                                                                        let stringified_route_check_resp = serde_json::to_string(&route_check_resp.clone().unwrap_or_default()).unwrap();
+                                                                        let _: () = redis_conn.set(&redis_notif_key.clone(), &stringified_route_check_resp).await.unwrap();
 
                                                                         if should_we_insert{
                                                                             // store geo results
-                                                                            let geo_result_store_resp = LocationMutatorActor::store_geo_result(
-                                                                                geo_check_resp.clone(), zerlog_producer_actor.clone(),
+                                                                            let geo_result_store_resp = LocationMutatorActor::store_route_result(
+                                                                                route_check_resp.clone(), zerlog_producer_actor.clone(),
                                                                                 notif_producer_actor.clone(), storage.clone()
                                                                             ).await;
                                                                         }
-
+                                                                    
 
                                                                     },
                                                                     Err(e) => {
@@ -334,7 +334,7 @@ impl LocationConsumerActor{
                                                                             *consts::STORAGE_IO_ERROR_CODE, // error code
                                                                             error_content_, // error content
                                                                             ErrorKind::Storage(crate::error::StorageError::RedisPool(e)), // error kind
-                                                                            "LocationConsumerActor.redis_pool", // method
+                                                                            "RouteLocationConsumerActor.redis_pool", // method
                                                                             Some(&zerlog_producer_actor)
                                                                         ).await;
                                                                         return; // cancel streaming over consumer and terminate the caller
@@ -350,7 +350,7 @@ impl LocationConsumerActor{
                                                                     *consts::CODEC_ERROR_CODE, // error code
                                                                     error_content_, // error content
                                                                     ErrorKind::Codec(crate::error::CodecError::Serde(e)), // error kind
-                                                                    "LocationConsumerActor.decode_serde", // method
+                                                                    "RouteLocationConsumerActor.decode_serde", // method
                                                                     Some(&zerlog_producer_actor)
                                                                 ).await;
 
@@ -366,7 +366,7 @@ impl LocationConsumerActor{
                                                             *consts::STORAGE_IO_ERROR_CODE, // error code
                                                             error_content, // error content
                                                             ErrorKind::Storage(crate::error::StorageError::Rmq(e)), // error kind
-                                                            "LocationConsumerActor.consume_ack", // method
+                                                            "RouteLocationConsumerActor.consume_ack", // method
                                                             Some(&zerlog_producer_actor)
                                                         ).await;
 
@@ -383,7 +383,7 @@ impl LocationConsumerActor{
                                                     *consts::STORAGE_IO_ERROR_CODE, // error code
                                                     error_content, // error content
                                                     ErrorKind::Storage(crate::error::StorageError::Rmq(e)), // error kind
-                                                    "LocationConsumerActor.consume_getting_delivery", // method
+                                                    "RouteLocationConsumerActor.consume_getting_delivery", // method
                                                     Some(&zerlog_producer_actor)
                                                 ).await;
 
@@ -400,7 +400,7 @@ impl LocationConsumerActor{
                                         *consts::STORAGE_IO_ERROR_CODE, // error code
                                         error_content, // error content
                                         ErrorKind::Storage(crate::error::StorageError::Rmq(e)), // error kind
-                                        "LocationConsumerActor.consume_basic_consume", // method
+                                        "RouteLocationConsumerActor.consume_basic_consume", // method
                                         Some(&zerlog_producer_actor)
                                     ).await;
 
@@ -419,7 +419,7 @@ impl LocationConsumerActor{
                             *consts::STORAGE_IO_ERROR_CODE, // error code
                             error_content, // error content
                             ErrorKind::Storage(crate::error::StorageError::Rmq(e)), // error kind
-                            "LocationConsumerActor.consume_create_channel", // method
+                            "RouteLocationConsumerActor.consume_create_channel", // method
                             Some(&zerlog_producer_actor)
                         ).await;
 
@@ -436,7 +436,7 @@ impl LocationConsumerActor{
                     *consts::STORAGE_IO_ERROR_CODE, // error code
                     error_content, // error content
                     ErrorKind::Storage(crate::error::StorageError::RmqPool(e)), // error kind
-                    "LocationConsumerActor.consume_pool", // method
+                    "RouteLocationConsumerActor.consume_pool", // method
                     Some(&zerlog_producer_actor)
                 ).await;
 
@@ -448,7 +448,7 @@ impl LocationConsumerActor{
 
 }
 
-impl Handler<ConsumeNotif> for LocationConsumerActor{
+impl Handler<ConsumeNotif> for RouteLocationConsumerActor{
     
     type Result = ();
     fn handle(&mut self, msg: ConsumeNotif, ctx: &mut Self::Context) -> Self::Result {

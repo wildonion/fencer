@@ -1,12 +1,12 @@
 version: "3"
 
 services:
-  geo-checker:
-    container_name: geo-checker
-    image: docker.yourdomain.com/geo-checker
+  route-checker:
+    container_name: route-checker
+    image: docker.sprun.ir/route-checker
     build:
       context: ./
-      dockerfile: ./infra/docker/rustacki-geo/Dockerfile
+      dockerfile: ./infra/docker/route-checker/Dockerfile
     restart: unless-stopped
     ports:
       - "2348:2344"
